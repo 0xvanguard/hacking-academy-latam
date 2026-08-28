@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacking Academy LATAM - Aprende Hacking Ético en Español</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0f; color: #fff; }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0a0a0f 0%, #0f0a1a 50%, #0a0f1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 255, 136, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 170, 255, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.04) 0%, transparent 40%);
+        }
+        
+        /* Matrix rain effect */
+        .matrix-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+        .matrix-col {
+            position: absolute;
+            top: -100%;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff88;
+            writing-mode: vertical-rl;
+            animation: matrix-fall linear infinite;
+        }
+        @keyframes matrix-fall {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(200vh); }
+        }
+
+        .hero-content { position: relative; z-index: 1; max-width: 900px; }
+        .logo { font-size: 5rem; margin-bottom: 1rem; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(90deg, #00ff88, #00aaff, #8a2be2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero .subtitle { font-size: 1.4rem; color: #888; margin-bottom: 2rem; line-height: 1.6; }
+
+        .terminal-preview {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 2rem auto;
+            max-width: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+        .terminal-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .terminal-line { margin: 0.3rem 0; }
+        .prompt { color: #00ff88; }
+        .command { color: #fff; }
+        .output { color: #888; }
+        .success { color: #00ff88; }
+        .warning { color: #ffbd2e; }
+        .error { color: #ff5f56; }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+        .btn-primary { background: linear-gradient(135deg, #00ff88, #00aaff); color: #000; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4); }
+        .btn-secondary { border: 2px solid #8a2be2; color: #8a2be2; }
+        .btn-secondary:hover { background: #8a2be2; color: #fff; }
+
+        /* Course Paths */
+        .paths {
+            max-width: 1100px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+        }
+        .paths h2 { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: #00ff88; }
+        .paths .subtitle-center { text-align: center; color: #888; margin-bottom: 3rem; }
+        .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .path-card {
+            background: #111;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #222;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .path-card:hover { transform: translateY(-5px); border-color: #00ff88; }
+        .path-card .level-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .level-beginner { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .level-intermediate { background: rgba(0, 170, 255, 0.2); color: #00aaff; }
+        .level-advanced { background: rgba(138, 43, 226, 0.2); color: #8a2be2; }
+        .level-expert { background: rgba(255, 68, 68, 0.2); color: #ff4444; }
+        .path-card .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .path-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .path-card p { color: #888; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem; }
+        .path-card .modules { color: #666; font-size: 0.85rem; }
+        .path-card .price-tag { color: #00ff88; font-weight: bold; font-size: 1.1rem; margin-top: 0.5rem; }
+
+        /* Gamification */
+        .gamification {
+            max-width: 1000px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+        .gamification h2 { font-size: 2.5rem; margin-bottom: 3rem; color: #8a2be2; }
+        .game-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+        .game-feature {
+            background: #111;
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid #222;
+        }
+        .game-feature .icon { font-size: 3rem; margin-bottom: 1rem; }
+        .game-feature h3 { margin-bottom: 0.5rem; }
+        .game-feature p { color: #888; font-size: 0.9rem; }
+
+        /* XP System */
+        .xp-system {
+            max-width: 800px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+        }
+        .xp-system h2 { text-align: center; font-size: 2rem; margin-bottom: 2rem; color: #ffbd2e; }
+        .xp-bar-container {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #333;
+        }
+        .xp-bar {
+            background: #222;
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00aaff, #8a2be2);
+            border-radius: 10px;
+            width: 65%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #000;
+        }
+        .levels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        .level { text-align: center; }
+        .level .badge { font-size: 2rem; }
+        .level .name { font-size: 0.8rem; color: #888; }
+        .level.active .name { color: #00ff88; font-weight: bold; }
+
+        /* Lab Preview */
+        .labs {
+            max-width: 1000px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+        .labs h2 { font-size: 2.5rem; margin-bottom: 3rem; color: #00aaff; }
+        .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .lab-card {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .lab-header {
+            background: #1a1a2e;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        .lab-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .lab-body { padding: 1.5rem; text-align: left; font-family: 'Courier New', monospace; font-size: 0.85rem; }
+        .lab-body .line { margin: 0.2rem 0; }
+
+        /* Pricing */
+        .pricing {
+            max-width: 1100px;
+            margin: 5rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+        .pricing h2 { font-size: 2.5rem; margin-bottom: 3rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .pricing-card {
+            background: #111;
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid #222;
+        }
+        .pricing-card.featured { border-color: #00ff88; position: relative; }
+        .pricing-card.featured::before {
+            content: 'MÁS POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #00ff88, #00aaff);
+            color: #000;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .price { font-size: 3rem; font-weight: bold; color: #00ff88; margin: 1rem 0; }
+        .price span { font-size: 1rem; color: #888; }
+        .pricing-card ul { list-style: none; margin: 1.5rem 0; text-align: left; }
+        .pricing-card li { padding: 0.5rem 0; color: #aaa; }
+        .pricing-card li::before { content: '✓ '; color: #00ff88; }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid #222;
+            color: #666;
+        }
+        footer a { color: #00ff88; text-decoration: none; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .levels { flex-wrap: wrap; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="matrix-bg" id="matrix"></div>
+        <div class="hero-content">
+            <div class="badge" style="display:inline-block;padding:0.5rem 1.5rem;border:1px solid #00ff88;border-radius:50px;color:#00ff88;font-size:0.9rem;margin-bottom:2rem;">🎮 Gamificado · 100% en Español · Labs en Vivo</div>
+            <div class="logo">🎓</div>
+            <h1>Hacking Academy LATAM</h1>
+            <p class="subtitle">
+                Aprende hacking ético como un videojuego.<br>
+                Niveles, misiones, labs en vivo, leaderboard global.<br>
+                <strong>El primer bootcamp de cybersecurity gamificado en español.</strong>
+            </p>
+
+            <div class="terminal-preview">
+                <div class="terminal-header">
+                    <div class="dot" style="background:#ff5f56;"></div>
+                    <div class="dot" style="background:#ffbd2e;"></div>
+                    <div class="dot" style="background:#27ca40;"></div>
+                </div>
+                <div class="terminal-line"><span class="prompt">hacker@academy:~$</span> <span class="command">./start_mission.sh</span></div>
+                <div class="terminal-line"><span class="output">🎯 Misión #47: SQL Injection en Banco Virtual</span></div>
+                <div class="terminal-line"><span class="output">📊 Dificultad: ████████░░ 8/10</span></div>
+                <div class="terminal-line"><span class="output">💰 Recompensa: 500 XP + Badge "SQL Master"</span></div>
+                <div class="terminal-line"><span class="success">✅ Lab environment ready. Good luck, hacker.</span></div>
+            </div>
+
+            <a href="#paths" class="btn btn-primary">🚀 Empezar Ahora</a>
+            <a href="#labs" class="btn btn-secondary">🧪 Ver Labs</a>
+        </div>
+    </section>
+
+    <section class="paths" id="paths">
+        <h2>🗺️ Rutas de Aprendizaje</h2>
+        <p class="subtitle-center">Desde cero hasta experto. Cada ruta es una aventura.</p>
+        <div class="path-grid">
+            <div class="path-card">
+                <span class="level-badge level-beginner">PRINCIPIANTE</span>
+                <div class="icon">🌱</div>
+                <h3>Fundamentos de Seguridad</h3>
+                <p>Redes, Linux, scripting, conceptos básicos. Tu primer paso en el mundo hacker.</p>
+                <p class="modules">📚 24 módulos · ⏱️ 40 horas · 🧪 12 labs</p>
+                <p class="price-tag">Gratis</p>
+            </div>
+            <div class="path-card">
+                <span class="level-badge level-beginner">PRINCIPIANTE</span>
+                <div class="icon">🌐</div>
+                <h3>Web Hacking</h3>
+                <p>OWASP Top 10, XSS, SQLi, CSRF. Aprende a encontrar y explotar bugs web.</p>
+                <p class="modules">📚 32 módulos · ⏱️ 60 horas · 🧪 20 labs</p>
+                <p class="price-tag">$9.99/mes</p>
+            </div>
+            <div class="path-card">
+                <span class="level-badge level-intermediate">INTERMEDIO</span>
+                <div class="icon">📱</div>
+                <h3>Mobile Hacking</h3>
+                <p>Android & iOS, APK reversing, API testing, Frida, Objection.</p>
+                <p class="modules">📚 28 módulos · ⏱️ 50 horas · 🧪 15 labs</p>
+                <p class="price-tag">$14.99/mes</p>
+            </div>
+            <div class="path-card">
+                <span class="level-badge level-intermediate">INTERMEDIO</span>
+                <div class="icon">🏗️</div>
+                <h3>Infrastructure & Cloud</h3>
+                <p>AWS/Azure/GCP security, Docker, Kubernetes, Active Directory attacks.</p>
+                <p class="modules">📚 36 módulos · ⏱️ 70 horas · 🧪 18 labs</p>
+                <p class="price-tag">$14.99/mes</p>
+            </div>
+            <div class="path-card">
+                <span class="level-badge level-advanced">AVANZADO</span>
+                <div class="icon">🤖</div>
+                <h3>AI Security & Prompt Injection</h3>
+                <p>LLM hacking, prompt injection, AI red teaming, model exploitation.</p>
+                <p class="modules">📚 20 módulos · ⏱️ 35 horas · 🧪 10 labs</p>
+                <p class="price-tag">$19.99/mes</p>
+            </div>
+            <div class="path-card">
+                <span class="level-badge level-expert">EXPERTO</span>
+                <div class="icon">🏴‍☠️</div>
+                <h3>Red Team Operations</h3>
+                <p>Pentesting full scope, C2 frameworks, persistence, evasion, reporting.</p>
+                <p class="modules">📚 40 módulos · ⏱️ 100 horas · 🧪 25 labs</p>
+                <p class="price-tag">$24.99/mes</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="gamification">
+        <h2>🎮 Gamificación Completa</h2>
+        <div class="game-features">
+            <div class="game-feature">
+                <div class="icon">⚔️</div>
+                <h3>Misiones Diarias</h3>
+                <p>Nuevos retos cada día. Completa misiones para ganar XP y subir de nivel.</p>
+            </div>
+            <div class="game-feature">
+                <div class="icon">🏆</div>
+                <h3>Leaderboard Global</h3>
+                <p>Compite contra hackers de toda LATAM. Rankings por país, skill y velocidad.</p>
+            </div>
+            <div class="game-feature">
+                <div class="icon">🏅</div>
+                <h3>Badges & Logros</h3>
+                <p>50+ badges por logros. "SQL Master", "Cloud Ninja", "0-Day Hunter".</p>
+            </div>
+            <div class="game-feature">
+                <div class="icon">🎯</div>
+                <h3>Torneos Semanales</h3>
+                <p>CTFs semanales con premios. Competencia en tiempo real entre equipos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="xp-system">
+        <h2>📊 Sistema de Progreso</h2>
+        <div class="xp-bar-container">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-weight:bold;">Nivel 13 - SQL Injection Specialist</span>
+                <span style="color:#ffbd2e;">⚡ 13,450 / 20,000 XP</span>
+            </div>
+            <div class="xp-bar">
+                <div class="xp-fill">67%</div>
+            </div>
+            <div class="levels">
+                <div class="level"><div class="badge">🌱</div><div class="name">Novato</div></div>
+                <div class="level"><div class="badge">⚔️</div><div class="name">Script Kiddie</div></div>
+                <div class="level"><div class="badge">🔥</div><div class="name">Hacker</div></div>
+                <div class="level active"><div class="badge">💀</div><div class="name">Elite</div></div>
+                <div class="level"><div class="badge">🏴‍☠️</div><div class="name">Legend</div></div>
+                <div class="level"><div class="badge">👑</div><div class="name">Grandmaster</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="labs" id="labs">
+        <h2>🧪 Labs en Vivo</h2>
+        <div class="lab-grid">
+            <div class="lab-card">
+                <div class="lab-header">
+                    <div class="dot" style="background:#ff5f56;"></div>
+                    <div class="dot" style="background:#ffbd2e;"></div>
+                    <div class="dot" style="background:#27ca40;"></div>
+                    <span style="color:#888;margin-left:0.5rem;font-size:0.85rem;">Lab: SQL Injection #12</span>
+                </div>
+                <div class="lab-body">
+                    <div class="line"><span style="color:#00ff88;">$</span> <span style="color:#fff;">sqlmap -u "http://lab.target?id=1" --dbs</span></div>
+                    <div class="line"><span style="color:#888;">[*] testing connection...</span></div>
+                    <div class="line"><span style="color:#ffbd2e;">[!] injection found in parameter 'id'</span></div>
+                    <div class="line"><span style="color:#00ff88;">[+] databases: admin_db, users_db</span></div>
+                    <div class="line"><span style="color:#00aaff;">[+] MISSION COMPLETE! +500 XP</span></div>
+                </div>
+            </div>
+            <div class="lab-card">
+                <div class="lab-header">
+                    <div class="dot" style="background:#ff5f56;"></div>
+                    <div class="dot" style="background:#ffbd2e;"></div>
+                    <div class="dot" style="background:#27ca40;"></div>
+                    <span style="color:#888;margin-left:0.5rem;font-size:0.85rem;">Lab: XSS Challenge #8</span>
+                </div>
+                <div class="lab-body">
+                    <div class="line"><span style="color:#00ff88;">$</span> <span style="color:#fff;">echo '&lt;script&gt;alert(document.cookie)&lt;/script&gt;'</span></div>
+                    <div class="line"><span style="color:#888;">[*] injectando payload en formulario...</span></div>
+                    <div class="line"><span style="color:#ffbd2e;">[!] Cookie reflejada sin sanitizar</span></div>
+                    <div class="line"><span style="color:#00ff88;">[+] XSS confirmado! Cookie capturada</span></div>
+                    <div class="line"><span style="color:#00aaff;">[+] MISSION COMPLETE! +350 XP</span></div>
+                </div>
+            </div>
+            <div class="lab-card">
+                <div class="lab-header">
+                    <div class="dot" style="background:#ff5f56;"></div>
+                    <div class="dot" style="background:#ffbd2e;"></div>
+                    <div class="dot" style="background:#27ca40;"></div>
+                    <span style="color:#888;margin-left:0.5rem;font-size:0.85rem;">Lab: Privilege Escalation #15</span>
+                </div>
+                <div class="lab-body">
+                    <div class="line"><span style="color:#00ff88;">$</span> <span style="color:#fff;">find / -perm -4000 2>/dev/null</span></div>
+                    <div class="line"><span style="color:#888;">[*] scanning SUID binaries...</span></div>
+                    <div class="line"><span style="color:#ff5f56;">[!] /usr/bin/nmap - SUID bit set!</span></div>
+                    <div class="line"><span style="color:#00ff88;">$ nmap --interactive → !sh</span></div>
+                    <div class="line"><span style="color:#00aaff;">[+] ROOT ACCESS! MISSION COMPLETE! +750 XP</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+        <h2>💎 Planes</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>🌱 Free</h3>
+                <div class="price">$0<span></span></div>
+                <ul>
+                    <li>1 ruta de aprendizaje</li>
+                    <li>Labs básicos</li>
+                    <li>5 misiones/día</li>
+                    <li>Leaderboard global</li>
+                    <li>Comunidad Discord</li>
+                </ul>
+                <a href="#" class="btn btn-secondary">Empezar Gratis</a>
+            </div>
+            <div class="pricing-card featured">
+                <h3>⚔️ Pro</h3>
+                <div class="price">$9.99<span>/mes</span></div>
+                <ul>
+                    <li>Todas las rutas</li>
+                    <li>Labs ilimitados</li>
+                    <li>Misiones ilimitadas</li>
+                    <li>Torneos semanales</li>
+                    <li>Certificados</li>
+                    <li>Soporte prioritario</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Suscribirse</a>
+            </div>
+            <div class="pricing-card">
+                <h3>🏴‍☠️ Team</h3>
+                <div class="price">$24.99<span>/mes</span></div>
+                <ul>
+                    <li>Todo de Pro incluido</li>
+                    <li>Equipo hasta 10 personas</li>
+                    <li>Dashboard de equipo</li>
+                    <li>Retos privados</li>
+                    <li>Labs personalizados</li>
+                    <li>Onboarding dedicado</li>
+                </ul>
+                <a href="#" class="btn btn-secondary">Contactar</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Hacking Academy LATAM - Aprende hacking, protege Latinoamérica</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="#">Cursos</a> · 
+            <a href="#">Labs</a> · 
+            <a href="#">Comunidad</a> · 
+            <a href="#">Blog</a> · 
+            <a href="#">API</a>
+        </p>
+    </footer>
+
+    <script>
+        // Simple matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const chars = '01アイウエオカキクケコサシスセソ';
+        for (let i = 0; i < 20; i++) {
+            const col = document.createElement('div');
+            col.className = 'matrix-col';
+            col.style.left = Math.random() * 100 + '%';
+            col.style.animationDuration = (5 + Math.random() * 10) + 's';
+            col.style.animationDelay = Math.random() * 5 + 's';
+            let text = '';
+            for (let j = 0; j < 30; j++) {
+                text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+            }
+            col.textContent = text;
+            matrix.appendChild(col);
+        }
+    </script>
+</body>
+</html>
