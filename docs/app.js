@@ -258,6 +258,12 @@ function goBack() {
     }
 }
 
+// ==================== UTILITIES ====================
+
+function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
 // ==================== TOAST ====================
 
 function showToast(msg, type = "info") {
@@ -746,7 +752,7 @@ function renderLabTerminal(app) {
                             ${lab.hints.map((h, i) => `
                                 <div class="hint" id="hint-${i}" onclick="document.getElementById('hint-${i}').classList.toggle('revealed')">
                                     <span class="hint-lock">🔒 Pista ${i+1}</span>
-                                    <span class="hint-text">${h}</span>
+                                    <span class="hint-text">${escapeHtml(h)}</span>
                                 </div>
                             `).join("")}
                         </div>
@@ -772,7 +778,7 @@ function renderLabTerminal(app) {
                     <div class="terminal-line system">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
                     <div class="terminal-line system">Type 'help' for available commands</div>
                     <div class="terminal-line system"></div>
-                    ${lab.terminal.commands.map(cmd => `<div class="terminal-line"><span class="prompt">${lab.terminal.prompt}</span> <span class="command">${cmd}</span></div>`).join("")}
+                    ${lab.terminal.commands.map(cmd => `<div class="terminal-line"><span class="prompt">${escapeHtml(lab.terminal.prompt)}</span> <span class="command">${escapeHtml(cmd)}</span></div>`).join("")}
                     <div class="terminal-line"><span class="prompt">${lab.terminal.prompt}</span> <span class="cursor">█</span></div>
                 </div>
                 <div class="terminal-input-wrap">
@@ -798,7 +804,7 @@ function terminalExec() {
     const lab = LABS.find(l => l.id === STATE.selectedLab);
     const line = document.createElement("div");
     line.className = "terminal-line";
-    line.innerHTML = `<span class="prompt">${lab.terminal.prompt}</span> <span class="command">${cmd}</span>`;
+    line.innerHTML = `<span class="prompt">${escapeHtml(lab.terminal.prompt)}</span> <span class="command">${escapeHtml(cmd)}</span>`;
     body.insertBefore(line, body.lastElementChild);
     input.value = "";
 
